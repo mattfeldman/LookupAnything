@@ -139,7 +139,7 @@ namespace Pathoschild.LookupAnything
                 {
                     try
                     {
-                        GitRelease release = UpdateHelper.GetLatestReleaseAsync("Pathoschild/LookupAnything").Result;
+                        GitRelease release = UpdateHelper.GetLatestRelease("Pathoschild/LookupAnything");
                         if (release.IsNewerThan(this.CurrentVersion))
                             this.NewRelease = release;
                     }

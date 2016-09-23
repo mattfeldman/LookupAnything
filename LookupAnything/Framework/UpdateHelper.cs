@@ -1,7 +1,5 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Version = StardewModdingAPI.Version;
 
@@ -24,24 +22,20 @@ namespace Pathoschild.LookupAnything.Framework
 
         /// <summary>Get the latest release in a GitHub repository.</summary>
         /// <param name="repository">The name of the repository from which to fetch releases (like "pathoschild/LookupAnything").</param>
-        public static async Task<GitRelease> GetLatestReleaseAsync(string repository)
+        public static GitRelease GetLatestRelease(string repository)
         {
-            using (HttpClient client = new HttpClient())
+            using (WebClient client = new WebClient())
             {
-                // get assembly info for user agent
+                // add user agent
                 AssemblyName assembly = typeof(UpdateHelper).Assembly.GetName();
+                client.Headers.Add(HttpRequestHeader.UserAgent, $"{assembly.Name}/{assembly.Version}");
 
-                // fetch latest release
-                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.github.com/repos/{repository}/releases/latest"))
-                {
-                    request.Headers.UserAgent.Add(new ProductInfoHeaderValue(assembly.Name, assembly.Version.ToString()));
-                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json")); // API version
-                    using (HttpResponseMessage response = await client.SendAsync(request))
-                    {
-                        string responseText = await response.Content.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<GitRelease>(responseText);
-                    }
-                }
+                // add API version
+                client.Headers.Add(HttpRequestHeader.Accept, "application/vnd.github.v3+json");
+
+                // fetch data
+                string response = client.DownloadString($"https://api.github.com/repos/{repository}/releases/latest");
+                return JsonConvert.DeserializeObject<GitRelease>(response);
             }
         }
     }
