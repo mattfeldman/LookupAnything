@@ -78,9 +78,16 @@ file if you want. These are the available settings:
 
 ## Compiling the mod
 [Installing a stable release from Nexus Mods](http://www.nexusmods.com/stardewvalley/mods/541/) is
-recommended. If you really want to compile the mod yourself, just edit `LookupAnything.csproj` and
-set the `<GamePath>` setting to your Stardew Valley directory path. Launching the project in Visual
-Studio will compile the code, package it into the mod directory, and start the game.
+recommended. This section covers a less common scenario where you need to compile the mod from
+source.
+
+1. Edit `LookupAnything.csproj` and set the `<GamePath>` property to your Stardew Valley directory
+   path.
+2. *Linux/Mac only:* change the target framework to .NET 4.0 for compatibility with SMAPI on those
+   platforms. (No code changes are required; the code is compatible with either framework.)
+
+Launching the project will then compile the code, package it into the mod directory, and start the
+game.
 
 Useful tools when working on this mod:
 * [dotPeek](https://www.jetbrains.com/decompiler/) to decompile the game into a Visual Studio
